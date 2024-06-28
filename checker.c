@@ -27,32 +27,19 @@ void printBreachMessage(Parameter parameter, float value, float min, float max) 
     }
 }
 
-int isTemperatureOk(float temperature) {
-    if (!isInRange(temperature, TEMPERATURE_MIN, TEMPERATURE_MAX)) {
-        printBreachMessage(TEMPERATURE, temperature, TEMPERATURE_MIN, TEMPERATURE_MAX);
-        return 0;
-    }
-    return 1;
-}
-
-int isSocOk(float soc) {
-    if (!isInRange(soc, SOC_MIN, SOC_MAX)) {
-        printBreachMessage(SOC, soc, SOC_MIN, SOC_MAX);
-        return 0;
-    }
-    return 1;
-}
-
-int isChargeRateOk(float chargeRate) {
-    if (!isInRange(chargeRate, 0, CHARGE_RATE_MAX)) {
-        printBreachMessage(CHARGE_RATE, chargeRate, 0, CHARGE_RATE_MAX);
+int checkParameter(Parameter parameter, float value, float min, float max) {
+    if (!isInRange(value, min, max)) {
+        printBreachMessage(parameter, value, min, max);
         return 0;
     }
     return 1;
 }
 
 int batteryIsOk(float temperature, float soc, float chargeRate) {
-    return isTemperatureOk(temperature) && isSocOk(soc) && isChargeRateOk(chargeRate);
+    int temperatureOk = checkParameter(TEMPERATURE, temperature, TEMPERATURE_MIN, TEMPERATURE_MAX);
+    int socOk = checkParameter(SOC, soc, SOC_MIN, SOC_MAX);
+    int chargeRateOk = checkParameter(CHARGE_RATE, chargeRate, 0, CHARGE_RATE_MAX);
+    return temperatureOk && socOk && chargeRateOk;
 }
 
 void runTests() {
